@@ -6,6 +6,8 @@ set(CMAKE_CXX_FLAGS_RELEASE "-O3 -g3 -Wall -Werror -fsized-deallocation -Wno-dep
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -O3")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
 
+include(CTest)
+
 # set -fuse-ld=lld if lld is found
 find_program(LLD_FOUND ld.lld)
 if(LLD_FOUND)
