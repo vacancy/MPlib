@@ -4,19 +4,6 @@
 
 namespace mplib::collision_detection::fcl {
 
-// Explicit Template Instantiation Definition ==========================================
-#define DEFINE_TEMPLATE_FCL_COMMON(S)                                                  \
-  template struct FCLObject<S>;                                                        \
-  template size_t collide<S>(const FCLObjectPtr<S> &obj1, const FCLObjectPtr<S> &obj2, \
-                             const fcl::CollisionRequest<S> &request,                  \
-                             fcl::CollisionResult<S> &result);                         \
-  template S distance<S>(const FCLObjectPtr<S> &obj1, const FCLObjectPtr<S> &obj2,     \
-                         const fcl::DistanceRequest<S> &request,                       \
-                         fcl::DistanceResult<S> &result)
-
-DEFINE_TEMPLATE_FCL_COMMON(float);
-DEFINE_TEMPLATE_FCL_COMMON(double);
-
 template <typename S>
 FCLObject<S>::FCLObject(const std::string &name_, const Pose<S> &pose_,
                         const std::vector<fcl::CollisionObjectPtr<S>> &shapes_,
@@ -71,5 +58,18 @@ S distance(const FCLObjectPtr<S> &obj1, const FCLObjectPtr<S> &obj2,
 
   return result.min_distance;
 }
+
+// Explicit Template Instantiation Definition ==========================================
+#define DEFINE_TEMPLATE_FCL_COMMON(S)                                                  \
+  template struct FCLObject<S>;                                                        \
+  template size_t collide<S>(const FCLObjectPtr<S> &obj1, const FCLObjectPtr<S> &obj2, \
+                             const fcl::CollisionRequest<S> &request,                  \
+                             fcl::CollisionResult<S> &result);                         \
+  template S distance<S>(const FCLObjectPtr<S> &obj1, const FCLObjectPtr<S> &obj2,     \
+                         const fcl::DistanceRequest<S> &request,                       \
+                         fcl::DistanceResult<S> &result)
+
+DEFINE_TEMPLATE_FCL_COMMON(float);
+DEFINE_TEMPLATE_FCL_COMMON(double);
 
 }  // namespace mplib::collision_detection::fcl

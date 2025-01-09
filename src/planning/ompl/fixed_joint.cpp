@@ -2,18 +2,6 @@
 
 namespace mplib::planning::ompl {
 
-// Explicit Template Instantiation Definition ==========================================
-#define DEFINE_TEMPLATE_FIXED_JOINT(S)                                            \
-  template bool isFixedJoint<S>(const FixedJointsTpl<S> &fixed_joints,            \
-                                size_t articulation_idx, size_t joint_idx);       \
-  template VectorX<S> addFixedJoints<S>(const FixedJointsTpl<S> &fixed_joints,    \
-                                        const VectorX<S> &state);                 \
-  template VectorX<S> removeFixedJoints<S>(const FixedJointsTpl<S> &fixed_joints, \
-                                           const VectorX<S> &state)
-
-DEFINE_TEMPLATE_FIXED_JOINT(float);
-DEFINE_TEMPLATE_FIXED_JOINT(double);
-
 template <typename S>
 bool isFixedJoint(const FixedJointsTpl<S> &fixed_joints, size_t articulation_idx,
                   size_t joint_idx) {
@@ -53,5 +41,17 @@ VectorX<S> removeFixedJoints(const FixedJointsTpl<S> &fixed_joints,
   }
   return ret;
 }
+
+// Explicit Template Instantiation Definition ==========================================
+#define DEFINE_TEMPLATE_FIXED_JOINT(S)                                            \
+  template bool isFixedJoint<S>(const FixedJointsTpl<S> &fixed_joints,            \
+                                size_t articulation_idx, size_t joint_idx);       \
+  template VectorX<S> addFixedJoints<S>(const FixedJointsTpl<S> &fixed_joints,    \
+                                        const VectorX<S> &state);                 \
+  template VectorX<S> removeFixedJoints<S>(const FixedJointsTpl<S> &fixed_joints, \
+                                           const VectorX<S> &state)
+
+DEFINE_TEMPLATE_FIXED_JOINT(float);
+DEFINE_TEMPLATE_FIXED_JOINT(double);
 
 }  // namespace mplib::planning::ompl

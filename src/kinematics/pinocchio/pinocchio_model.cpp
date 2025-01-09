@@ -12,13 +12,7 @@
 
 namespace mplib::kinematics::pinocchio {
 
-// Explicit Template Instantiation Definition ==========================================
-#define DEFINE_TEMPLATE_PINOCCHIO_MODEL(S) template class PinocchioModelTpl<S>
-
-DEFINE_TEMPLATE_PINOCCHIO_MODEL(float);
-DEFINE_TEMPLATE_PINOCCHIO_MODEL(double);
-
-template <typename S>
+  template <typename S>
 PinocchioModelTpl<S>::PinocchioModelTpl(const std::string &urdf_filename,
                                         const Vector3<S> &gravity, bool verbose)
     : verbose_(verbose) {
@@ -38,32 +32,6 @@ std::unique_ptr<PinocchioModelTpl<S>> PinocchioModelTpl<S>::createFromURDFString
     const std::string &urdf_string, const Vector3<S> &gravity, bool verbose) {
   auto urdf = urdf::parseURDF(urdf_string);
   return std::make_unique<PinocchioModelTpl<S>>(urdf, gravity, verbose);
-}
-
-template <typename S>
-void PinocchioModelTpl<S>::init(const urdf::ModelInterfaceSharedPtr &urdf_model,
-                                const Vector3<S> &gravity) {
-  urdf_model_ = urdf_model;
-
-  pinocchio::urdf::details::UrdfVisitor<S, 0, pinocchio::JointCollectionDefaultTpl>
-      visitor(model_);
-  if (verbose_) {
-    print_verbose("Begin to parse URDF");
-    visitor.log = &std::cout;
-  }
-  if (not urdf_model_)
-    throw std::invalid_argument("The XML stream does not contain a valid URDF model.");
-
-  visitor.setName(urdf_model_->getName());
-  const urdf::LinkConstSharedPtr root_link = urdf_model_->getRoot();
-  visitor.addRootJoint(convertInertial<S>(root_link->inertial), root_link->name);
-  for (const auto &child : root_link->child_links) dfsParseTree(child, visitor);
-
-  model_.gravity = {gravity, Vector3<S> {0, 0, 0}};
-  data_ = pinocchio::DataTpl<S>(model_);
-  if (verbose_) print_verbose("Begin to set link order and joint order");
-  setLinkOrder(getLinkNames(false));
-  setJointOrder(getJointNames(false));
 }
 
 template <typename S>
@@ -424,8 +392,8 @@ void PinocchioModelTpl<S>::printFrames() const {
       type_name = "BODY";
     else if (frame.type == pinocchio::SENSOR)
       type_name = "BODY";
-    print_info("Frame ", i, " ", frame.name, " ", frame.parent, " ", type_name, " ",
-               frame.previousFrame);
+    print_info("Frame ", i, " ", frame.name, " ", frame.parentJoint, " ", type_name, " ",
+               frame.parentFrame);
   }
 }
 
@@ -434,7 +402,7 @@ std::vector<std::string> PinocchioModelTpl<S>::getChainJointName(
     const std::string &end_effector) const {
   const auto frame_id = model_.getBodyId(end_effector);
   const std::vector<std::size_t> index_pinocchio =
-      model_.supports[model_.frames[frame_id].parent];
+      model_.supports[model_.frames[frame_id].parentJoint];
   std::vector<std::string> ret;
   for (const auto &index : index_pinocchio)
     if (joint_index_pinocchio2user_[index] != -1) ret.push_back(model_.names[index]);
@@ -446,7 +414,7 @@ std::vector<std::size_t> PinocchioModelTpl<S>::getChainJointIndex(
     const std::string &end_effector) const {
   const auto frame_id = model_.getBodyId(end_effector);
   const std::vector<std::size_t> index_pinocchio =
-      model_.supports[model_.frames[frame_id].parent];
+      model_.supports[model_.frames[frame_id].parentJoint];
   std::vector<std::size_t> ret;
   for (const auto &index : index_pinocchio)
     if (joint_index_pinocchio2user_[index] != -1)
@@ -527,7 +495,7 @@ Isometry3<S> PinocchioModelTpl<S>::getLinkPose(size_t index) const {
   ASSERT(index < static_cast<size_t>(link_index_user2pinocchio_.size()),
          "The link index is out of bound!");
   const auto frame = link_index_user2pinocchio_[index];
-  const auto parent_joint = model_.frames[frame].parent;
+  const auto parent_joint = model_.frames[frame].parentJoint;
 
   const auto link2joint = model_.frames[frame].placement;
   const auto joint2world = data_.oMi[parent_joint];
@@ -557,7 +525,7 @@ Matrix6X<S> PinocchioModelTpl<S>::getLinkJacobian(size_t index, bool local) cons
   ASSERT(index < static_cast<size_t>(link_index_user2pinocchio_.size()),
          "link index out of bound");
   const auto frameId = link_index_user2pinocchio_[index];
-  const auto jointId = model_.frames[frameId].parent;
+  const auto jointId = model_.frames[frameId].parentJoint;
 
   const auto link2joint = model_.frames[frameId].placement;
   const auto joint2world = data_.oMi[jointId];
@@ -594,7 +562,7 @@ std::tuple<VectorX<S>, bool, Vector6<S>> PinocchioModelTpl<S>::computeIKCLIK(
   ASSERT(index < static_cast<size_t>(link_index_user2pinocchio_.size()),
          "link index out of bound");
   const auto frameId = link_index_user2pinocchio_[index];
-  const auto jointId = model_.frames[frameId].parent;
+  const auto jointId = model_.frames[frameId].parentJoint;
   const auto link2joint = model_.frames[frameId].placement;
 
   const pinocchio::SE3Tpl<S> link_pose {pose.q, pose.p};
@@ -646,7 +614,7 @@ std::tuple<VectorX<S>, bool, Vector6<S>> PinocchioModelTpl<S>::computeIKCLIKJL(
   ASSERT(index < static_cast<size_t>(link_index_user2pinocchio_.size()),
          "link index out of bound");
   const auto frameId = link_index_user2pinocchio_[index];
-  const auto jointId = model_.frames[frameId].parent;
+  const auto jointId = model_.frames[frameId].parentJoint;
   const auto link2joint = model_.frames[frameId].placement;
 
   const pinocchio::SE3Tpl<S> link_pose {pose.q, pose.p};
@@ -696,5 +664,38 @@ std::tuple<VectorX<S>, bool, Vector6<S>> PinocchioModelTpl<S>::computeIKCLIKJL(
   }
   return {qposPinocchio2User(q), success, err};
 }
+
+template <typename S>
+void PinocchioModelTpl<S>::init(const urdf::ModelInterfaceSharedPtr &urdf_model,
+                                const Vector3<S> &gravity) {
+  urdf_model_ = urdf_model;
+
+  pinocchio::urdf::details::UrdfVisitor<S, 0, pinocchio::JointCollectionDefaultTpl>
+      visitor(model_);
+  if (verbose_) {
+    print_verbose("Begin to parse URDF");
+    visitor.log = &std::cout;
+  }
+  if (not urdf_model_)
+    throw std::invalid_argument("The XML stream does not contain a valid URDF model.");
+
+  visitor.setName(urdf_model_->getName());
+  const urdf::LinkConstSharedPtr root_link = urdf_model_->getRoot();
+  visitor.addRootJoint(convertInertial<S>(root_link->inertial), root_link->name);
+  for (const auto &child : root_link->child_links) dfsParseTree(child, visitor);
+
+  model_.gravity = {gravity, Vector3<S> {0, 0, 0}};
+  data_ = pinocchio::DataTpl<S>(model_);
+  if (verbose_) print_verbose("Begin to set link order and joint order");
+  setLinkOrder(getLinkNames(false));
+  setJointOrder(getJointNames(false));
+}
+
+// Explicit Template Instantiation Definition ==========================================
+#define DEFINE_TEMPLATE_PINOCCHIO_MODEL(S) template class PinocchioModelTpl<S>
+
+DEFINE_TEMPLATE_PINOCCHIO_MODEL(float);
+DEFINE_TEMPLATE_PINOCCHIO_MODEL(double);
+
 
 }  // namespace mplib::kinematics::pinocchio

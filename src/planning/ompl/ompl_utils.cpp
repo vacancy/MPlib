@@ -5,18 +5,6 @@
 
 namespace mplib::planning::ompl {
 
-// Explicit Template Instantiation Definition ==========================================
-#define DEFINE_TEMPLATE_OMPL_UTILS(S)                                              \
-  template std::vector<S> compoundState2Vector<S>(const ob::State *state_raw,      \
-                                                  const ob::SpaceInformation *si); \
-  template std::vector<S> rvssState2Vector<S>(const ob::State *state_raw,          \
-                                              const ob::SpaceInformation *si);     \
-  template VectorX<S> state2Eigen<S>(const ob::State *state_raw,                   \
-                                     const ob::SpaceInformation *si, bool is_rvss)
-
-DEFINE_TEMPLATE_OMPL_UTILS(float);
-DEFINE_TEMPLATE_OMPL_UTILS(double);
-
 template <typename S>
 std::vector<S> compoundState2Vector(const ob::State *state_raw,
                                     const ob::SpaceInformation *si) {
@@ -62,5 +50,17 @@ VectorX<S> state2Eigen(const ob::State *state_raw, const ob::SpaceInformation *s
                                      : compoundState2Vector<S>(state_raw, si);
   return vector2Eigen<S, S>(state_vec);
 }
+
+// Explicit Template Instantiation Definition ==========================================
+#define DEFINE_TEMPLATE_OMPL_UTILS(S)                                              \
+  template std::vector<S> compoundState2Vector<S>(const ob::State *state_raw,      \
+                                                  const ob::SpaceInformation *si); \
+  template std::vector<S> rvssState2Vector<S>(const ob::State *state_raw,          \
+                                              const ob::SpaceInformation *si);     \
+  template VectorX<S> state2Eigen<S>(const ob::State *state_raw,                   \
+                                     const ob::SpaceInformation *si, bool is_rvss)
+
+DEFINE_TEMPLATE_OMPL_UTILS(float);
+DEFINE_TEMPLATE_OMPL_UTILS(double);
 
 }  // namespace mplib::planning::ompl

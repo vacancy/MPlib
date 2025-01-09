@@ -1,5 +1,3 @@
-from importlib.metadata import version
-
 from .planner import Planner
 from .pymp import (
     ArticulatedModel,
@@ -9,4 +7,4 @@ from .pymp import (
     set_global_seed,
 )
 
-__version__ = version("mplib")
+__version__ = '0.0.1'

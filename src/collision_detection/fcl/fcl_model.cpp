@@ -18,12 +18,6 @@
 
 namespace mplib::collision_detection::fcl {
 
-// Explicit Template Instantiation Definition ==========================================
-#define DEFINE_TEMPLATE_FCL_MODEL(S) template class FCLModelTpl<S>
-
-DEFINE_TEMPLATE_FCL_MODEL(float);
-DEFINE_TEMPLATE_FCL_MODEL(double);
-
 template <typename S>
 FCLModelTpl<S>::FCLModelTpl(const std::string &urdf_filename, bool convex, bool verbose)
     : use_convex_(convex), verbose_(verbose) {
@@ -391,5 +385,11 @@ WorldDistanceResultTpl<S> FCLModelTpl<S>::distanceWith(
     }
   return ret;
 }
+
+// Explicit Template Instantiation Definition ==========================================
+#define DEFINE_TEMPLATE_FCL_MODEL(S) template class FCLModelTpl<S>
+
+DEFINE_TEMPLATE_FCL_MODEL(float);
+DEFINE_TEMPLATE_FCL_MODEL(double);
 
 }  // namespace mplib::collision_detection::fcl
