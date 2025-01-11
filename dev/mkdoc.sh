@@ -39,7 +39,7 @@ REPO_DIR=$(dirname "$(dirname "$SCRIPT_PATH")")
 cd "$REPO_DIR"
 
 for filepath in `find "$CPP_INCLUDE_DIR" -name "*.h" ! -name "types.h" ! -path "*macros*"`; do
-  output_path="${OUTPUT_DOCSTRING_DIR}/$(realpath --relative-to="$CPP_INCLUDE_DIR" "$filepath")"
+  output_path="${OUTPUT_DOCSTRING_DIR}/$(grealpath --relative-to="$CPP_INCLUDE_DIR" "$filepath")"
 
   # Create output dir
   mkdir -p "$(dirname "$output_path")"

@@ -862,7 +862,10 @@ def main():
     # Parse "-I" include_dirs, check if it exists
     if parsed_args.include_dirs is not None:
         for include_dir in parsed_args.include_dirs:
-            _append_include_dir(mkdoc_args, include_dir)
+            try:
+                _append_include_dir(mkdoc_args, include_dir)
+            except FileNotFoundError as e:
+                pass
 
     # Parse "-D" macro definitions, check macro name is valid
     if parsed_args.definitions is not None:

@@ -57,6 +57,8 @@ static const char *__doc_mplib_collision_detection_fcl_FCLObject_shape_poses = R
 
 static const char *__doc_mplib_collision_detection_fcl_FCLObject_shapes = R"doc(All collision shapes (``fcl::CollisionObjectPtr``) making up this FCLObject)doc";
 
+static const char *__doc_mplib_collision_detection_fcl_FCLObject_setPose = R"doc(Update the pose of this FCLObject)doc";
+
 static const char *__doc_mplib_collision_detection_fcl_collide =
 R"doc(
 Collision function between two ``FCLObject``

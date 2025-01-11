@@ -219,6 +219,31 @@ articulation-attach collision, attach-attach collision)
 :param request: collision request params.
 :return: List of ``WorldCollisionResult`` objects)doc";
 
+static const char *__doc_mplib_PlanningWorldTpl_checkSceneCollision =
+R"doc(
+Check collision with scene objects (non-articulated objects)
+
+:param scene_object_names: names of scene objects to check collision against.
+:param request: collision request params.
+:return: List of ``WorldCollisionResult`` objects)doc";
+
+static const char *__doc_mplib_PlanningWorldTpl_checkGeneralObjectCollision =
+    R"doc(
+Check collision between an object and the world.
+
+:param name: name of the object
+:param request: collision request params.
+:return: List of ``WorldCollisionResult`` objects)doc";
+
+static const char *__doc_mplib_PlanningWorldTpl_checkGeneralObjectPairCollision =
+    R"doc(
+Check collision between two specified objects.
+
+:param name1: name of the first object
+:param name2: name of the second object
+:param request: collision request params.
+:return: List of ``WorldCollisionResult`` objects)doc";
+
 static const char *__doc_mplib_PlanningWorldTpl_detachAllObjects =
 R"doc(
 Detaches all attached objects. Updates ``acm_`` to disallow collision between
@@ -256,6 +281,14 @@ static const char *__doc_mplib_PlanningWorldTpl_distanceSelf =
 R"doc(
 Get the minimum distance to self-collision given the robot in current state
 
+:param request: distance request params.
+:return: a ``WorldDistanceResult`` object)doc";
+
+static const char *__doc_mplib_PlanningWorldTpl_distanceScene =
+R"doc(
+Compute the minimum distance-to-all-collision between a lsit of objects
+
+:param scene_object_names: list of scene object names
 :param request: distance request params.
 :return: a ``WorldDistanceResult`` object)doc";
 

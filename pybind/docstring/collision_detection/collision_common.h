@@ -46,6 +46,8 @@ static const char *__doc_mplib_collision_detection_WorldCollisionResultTpl_objec
 
 static const char *__doc_mplib_collision_detection_WorldCollisionResultTpl_res = R"doc(the fcl CollisionResult)doc";
 
+static const char *__doc_mplib_collision_detection_WorldCollisionResultTpl_max_penetration = R"doc(max penetration depth between the two objects)doc";
+
 static const char *__doc_mplib_collision_detection_WorldDistanceResultTpl = R"doc(Result of minimum distance-to-collision query.)doc";
 
 static const char *__doc_mplib_collision_detection_WorldDistanceResultTpl_WorldDistanceResultTpl =

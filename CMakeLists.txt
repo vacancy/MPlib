@@ -56,7 +56,7 @@ set_target_properties(mplib PROPERTIES POSITION_INDEPENDENT_CODE TRUE)
 # add_custom_target(
 #   pybind11_mkdoc ALL
 #   COMMAND bash "${CMAKE_CURRENT_SOURCE_DIR}/dev/mkdoc.sh"
-#                "-I$<JOIN:$<TARGET_PROPERTY:mp,INCLUDE_DIRECTORIES>,;-I>"
+#                "-I$<JOIN:$<TARGET_PROPERTY:mplib,INCLUDE_DIRECTORIES>,;-I>"
 #   BYPRODUCTS "${CMAKE_CURRENT_SOURCE_DIR}/pybind/docstring/*.h"
 #   DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/dev/mkdoc.sh" "${MPLIB_MKDOC_HEADER}"
 #   WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}

@@ -152,6 +152,18 @@ void build_pyplanning_world(py::module &pymp) {
       .def("check_collision", &PlanningWorld::checkCollision,
            py::arg("request") = CollisionRequest(),
            DOC(mplib, PlanningWorldTpl, checkCollision))
+      .def("check_scene_collision", &PlanningWorld::checkSceneCollision,
+           py::arg("scene_object_names"),
+           py::arg("request") = CollisionRequest(),
+           DOC(mplib, PlanningWorldTpl, checkSceneCollision))
+      .def("check_general_object_collision", &PlanningWorld::checkGeneralObjectCollision,
+           py::arg("name1"),
+           py::arg("request") = CollisionRequest(),
+           DOC(mplib, PlanningWorldTpl, checkGeneralObjectCollision))
+      .def("check_general_object_pair_collision",
+           &PlanningWorld::checkGeneralObjectPairCollision, py::arg("name1"),
+           py::arg("name2"), py::arg("request") = CollisionRequest(),
+           DOC(mplib, PlanningWorldTpl, checkGeneralObjectPairCollision))
 
       .def("distance_to_self_collision", &PlanningWorld::distanceToSelfCollision,
            DOC(mplib, PlanningWorldTpl, distanceToSelfCollision))
@@ -166,7 +178,10 @@ void build_pyplanning_world(py::module &pymp) {
       .def("distance_to_collision", &PlanningWorld::distanceToCollision,
            DOC(mplib, PlanningWorldTpl, distanceToCollision))
       .def("distance", &PlanningWorld::distance, py::arg("request") = DistanceRequest(),
-           DOC(mplib, PlanningWorldTpl, distance));
+           DOC(mplib, PlanningWorldTpl, distance))
+      .def("distance_scene", &PlanningWorld::distanceScene,
+           py::arg("scene_object_names"), py::arg("request") = DistanceRequest(),
+           DOC(mplib, PlanningWorldTpl, distanceScene));
 }
 
 }  // namespace mplib
