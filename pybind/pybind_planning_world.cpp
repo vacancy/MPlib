@@ -68,6 +68,7 @@ void build_pyplanning_world(py::module &pymp) {
            DOC(mplib, PlanningWorldTpl, addObject, 2))
       .def("add_point_cloud", &PlanningWorld::addPointCloud, py::arg("name"),
            py::arg("vertices"), py::arg("resolution") = 0.01,
+           py::arg("pose") = Pose<S>(),
            DOC(mplib, PlanningWorldTpl, addPointCloud))
       .def("remove_object", &PlanningWorld::removeObject, py::arg("name"),
            DOC(mplib, PlanningWorldTpl, removeObject))

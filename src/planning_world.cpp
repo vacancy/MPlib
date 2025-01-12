@@ -92,12 +92,16 @@ void PlanningWorldTpl<S>::addObject(const std::string &name,
 template <typename S>
 void PlanningWorldTpl<S>::addPointCloud(const std::string &name,
                                         const MatrixX3<S> &vertices,
-                                        double resolution) {
+                                        double resolution,
+                                        const Pose<S> &pose) {
   auto tree = std::make_shared<octomap::OcTree>(resolution);
   for (const auto &row : vertices.rowwise())
     tree->updateNode(octomap::point3d(row(0), row(1), row(2)), true);
-  addObject(name,
-            std::make_shared<CollisionObject>(std::make_shared<fcl::OcTree<S>>(tree)));
+  auto cobject = std::make_shared<CollisionObject>(std::make_shared<fcl::OcTree<S>>(tree));
+  addObject(
+    std::make_shared<FCLObject>(
+      name, pose, std::vector<CollisionObjectPtr> {cobject}, std::vector<Pose<S>> {Pose<S>()}
+  ));
 }
 
 template <typename S>

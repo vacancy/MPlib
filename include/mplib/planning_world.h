@@ -173,7 +173,7 @@ class PlanningWorldTpl {
    * @param resolution: resolution of the point in ``octomap::OcTree``
    */
   void addPointCloud(const std::string &name, const MatrixX3<S> &vertices,
-                     double resolution = 0.01);
+                     double resolution = 0.01, const Pose<S> &pose = Pose<S>());
 
   /**
    * Removes (and detaches) the collision object with given name if exists.
