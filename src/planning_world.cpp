@@ -10,7 +10,9 @@ namespace mplib {
 
 template <typename S>
 S getFCLContactMaxPenetration(const fcl::CollisionResult<S> &result) {
-  S max_penetration = -1;
+  S max_penetration = std::numeric_limits<S>::min();
+  if (result.numContacts() == 0) return 1;
+
   for (int i = 0; i < result.numContacts(); ++i) {
     const auto &contact = result.getContact(i);
     max_penetration = std::max(max_penetration, contact.penetration_depth);
