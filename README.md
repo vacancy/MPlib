@@ -11,16 +11,24 @@
 [![License](https://img.shields.io/github/license/haosulab/MPlib)](https://github.com/haosulab/MPlib?tab=MIT-1-ov-file#readme)
 
 MPlib is a lightweight python package for motion planning,
-which is decoupled from ROS and is easy to set up.  
+which is decoupled from ROS and is easy to set up.
 With a few lines of python code, one can achieve most of the motion planning
 functionalities in robot manipulation.
 
 ## Installation
 
-Pre-built pip packages support Ubuntu 20.04+ with Python 3.8+.
+```sh
+mkdir build
+cd build
+cmake .. -DPYTHON_EXECUTABLE="`which python3`"
+make install
+cd ..
 
-```
-pip install mplib
+cd mplib
+cp ../build/pymp.cpython-312-darwin.so ./
+cd ../
+
+pip install -e .
 ```
 
 ## Usage
